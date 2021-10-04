@@ -7,15 +7,71 @@
 //
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    lazy var managedObjectContext: NSManagedObjectContext = self.persistentContainer.viewContext
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "WishlistModel")
+        container.loadPersistentStores(completionHandler: { storeDescription, error in
+            if let error = error {
+                fatalError("Could load data store: \(error)")
+            }
+        })
+        return container
+    }()
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let navController = window!.rootViewController as! UINavigationController
+        let maincontroller = navController.viewControllers.first as! MainViewController
+        maincontroller.managedObjectContext = managedObjectContext
+        
+        listenForFatalCoreDataNotifications()
+        return true
+    }
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool
+    {
+        let message = url.host?.removingPercentEncoding
+        
+        let myArray = message?.components(separatedBy: "wishlistListID")
+        let encodedUrl = myArray![0]
+        let encodedListId = myArray![1]
+
+        let decodedDataUrl = Data(base64Encoded: encodedUrl)!
+        let url = String(data: decodedDataUrl, encoding: .utf8)!
+        print(url)
+        let decodedDataListId = Data(base64Encoded: encodedListId)!
+        let listId = String(data: decodedDataListId, encoding: .utf8)!
+        print(listId)
+        
+        let wish = Wysh(context: managedObjectContext)
+        wish.url = url
+        wish.listId = Int(listId)! as NSNumber
+        wish.imageId = Wysh.nextPhotoID() as NSNumber
+        if let data = UIImageJPEGRepresentation(UIImage(named: "Giftbox")!, 0.5) {
+            do {
+                try data.write(to: wish.photoURL, options: .atomic)
+            } catch {
+                print("Error writing file: \(error)")
+            }
+        }
+        wish.name = "Wish from web"
+        
+        do{
+            try managedObjectContext.save()
+            afterDelay(0.6){
+                
+            }
+        }catch{
+            fatalCoreDataError(error)
+        }
+
         return true
     }
 
@@ -40,7 +96,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
+    
+    func listenForFatalCoreDataNotifications() {
+        // 1
+        NotificationCenter.default.addObserver(
+            forName: CoreDataSaveFailedNotification,
+            object: nil, queue: OperationQueue.main,
+            using: { notification in
+                let message = "There was a fatal error in the app, please try agan later"
+                let alert = UIAlertController( title: "Internal Error", message: message, preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default) { _ in
+                    let exception = NSException(
+                        name: NSExceptionName.internalInconsistencyException,
+                        reason: "Fatal Core Data error", userInfo: nil)
+                    exception.raise()
+                }
+                alert.addAction(action)
+                let tabController = self.window!.rootViewController!
+                tabController.present(alert, animated: true, completion: nil)
+        })
+    }
 }
 
