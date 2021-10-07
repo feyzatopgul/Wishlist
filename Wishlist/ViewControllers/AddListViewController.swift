@@ -50,7 +50,7 @@ class AddListViewController: UIViewController {
     }
     
     func addListToNSUserDefaults(list: List){
-        let userDefaults = UserDefaults(suiteName: "group.wl.extension")!
+        let userDefaults = UserDefaults(suiteName: "group.mywishlist.extension")!
         if let mylists = userDefaults.dictionary(forKey: "MyLists"){
             var listeler = mylists
             listeler[list.name!] = list.id

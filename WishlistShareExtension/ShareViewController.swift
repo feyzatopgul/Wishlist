@@ -79,7 +79,7 @@ class ShareViewController: SLComposeServiceViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let userDefaults = UserDefaults(suiteName: "group.wl.extension")!
+        let userDefaults = UserDefaults(suiteName: "group.mywishlist.extension")!
         if let mylists = userDefaults.dictionary(forKey: "MyLists"){
             print("\(mylists)")
             dict = mylists as! [String : Int]
