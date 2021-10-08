@@ -117,8 +117,8 @@ class TakePhotoViewController: UIViewController{
                     }
                 }
             }
-            else{
-                if let data = UIImageJPEGRepresentation(UIImage(named: "Giftbox")!, 0.5) {
+            else{ if let data =
+                        UIImagePNGRepresentation(UIImage(named: "Giftbox")!) {
                     do {
                         try data.write(to: wish.photoURL, options: .atomic)
                     } catch {

@@ -1,23 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "gift.png",
       "idiom" : "universal",
-      "filename" : "giftbox@1x.png",
       "scale" : "1x"
     },
     {
+      "filename" : "gift@2x.png",
       "idiom" : "universal",
-      "filename" : "giftbox@2x.png",
       "scale" : "2x"
     },
     {
+      "filename" : "gift@3x.png",
       "idiom" : "universal",
-      "filename" : "giftbox@3x.png",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }
