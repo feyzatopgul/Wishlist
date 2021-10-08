@@ -20,7 +20,7 @@ public class Wysh: NSManagedObject {
     
     var photoURL: URL {
         assert(imageId != nil, "No photo ID set")
-        let filename = "Photo-\(imageId!).jpg"
+        let filename = "Photo-\(imageId!).png"
         return applicationDocumentsDirectory.appendingPathComponent(filename)
     }
     

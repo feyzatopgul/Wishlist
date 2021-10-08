@@ -109,7 +109,7 @@ class TakePhotoViewController: UIViewController{
         
             
             if let image = image {
-                if let data = UIImageJPEGRepresentation(image, 0.5) {
+                if let data = UIImagePNGRepresentation(image) {
                     do {
                         try data.write(to: wish.photoURL, options: .atomic)
                     } catch {
@@ -129,7 +129,7 @@ class TakePhotoViewController: UIViewController{
         }
         else{
             if let image = image {
-                if let data = UIImageJPEGRepresentation(image, 0.5) {
+                if let data = UIImagePNGRepresentation(image) {
                     do {
                         try data.write(to: wish.photoURL, options: .atomic)
                     } catch {

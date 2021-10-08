@@ -54,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         wish.url = url
         wish.listId = Int(listId)! as NSNumber
         wish.imageId = Wysh.nextPhotoID() as NSNumber
-        if let data = UIImageJPEGRepresentation(UIImage(named: "Giftbox")!, 0.5) {
+        if let data = UIImagePNGRepresentation(UIImage(named: "Giftbox")!) {
             do {
                 try data.write(to: wish.photoURL, options: .atomic)
             } catch {
